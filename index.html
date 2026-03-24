@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NoteNest – Student Notes Sharing Platform</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="nav" id="navbar">
+        <div class="nav-logo">
+            <i class="fa-solid fa-book-open-reader"></i>
+            <span>NoteNest</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active" onclick="showPage('home', this)">Home</a>
+            <a href="#" class="nav-link" onclick="showPage('notes', this)">Notes</a>
+            <a href="#" class="nav-link" onclick="showPage('upload', this)">Upload</a>
+            <a href="#" class="nav-link" onclick="showPage('dash', this)">Dashboard</a>
+        </div>
+        <div class="nav-actions">
+            <button class="dark-toggle" id="darkBtn" title="Toggle dark mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <button class="btn-login" onclick="showPage('auth')">Login</button>
+            <button class="btn-signup" onclick="showPage('auth')">Get Started</button>
+        </div>
+        <button class="nav-burger" onclick="toggleMobile()" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <a href="#" class="nav-link" onclick="showPage('home', null, true)">🏠 Home</a>
+        <a href="#" class="nav-link" onclick="showPage('notes', null, true)">📚 Notes</a>
+        <a href="#" class="nav-link" onclick="showPage('upload', null, true)">⬆️ Upload</a>
+        <a href="#" class="nav-link" onclick="showPage('dash', null, true)">📊 Dashboard</a>
+    </div>
+
+    <main id="main-content">
+        <div class="page active" id="page-home">
+            <section class="hero">
+                <div class="hero-orb hero-orb1"></div>
+                <div class="hero-orb hero-orb2"></div>
+                <div class="hero-orb hero-orb3"></div>
+                <div class="hero-badge"><i class="fa-solid fa-star"></i> #1 Student Notes Platform</div>
+                <h1 class="hero-title">Share, Explore &amp; <span>Learn Together</span></h1>
+                <p class="hero-sub">Upload your notes, discover study materials, and collaborate with students worldwide.</p>
+                
+                <div class="hero-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="heroSearch" placeholder="Search by subject..." />
+                    <button class="hero-search-btn">Search</button>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="hero-stat"><div class="hero-stat-n" id="cnt1">1250</div><div class="hero-stat-l">Notes</div></div>
+                    <div class="hero-stat"><div class="hero-stat-n" id="cnt2">850</div><div class="hero-stat-l">Students</div></div>
+                    <div class="hero-stat"><div class="hero-stat-n" id="cnt3">4200</div><div class="hero-stat-l">Downloads</div></div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-inner">
+                    <div class="section-head">
+                        <div>
+                            <div class="section-tag">🔥 Trending</div>
+                            <h2 class="section-title">Featured <span>Notes</span></h2>
+                        </div>
+                    </div>
+                    <div class="notes-grid" id="featuredGrid">
+                        </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="page" id="page-auth">
+            <div class="auth-wrap">
+                <div class="auth-card">
+                    <h2 class="auth-title">Welcome Back</h2>
+                    <button class="auth-btn" onclick="showPage('home')">Return Home</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
