@@ -1,3 +1,10 @@
+// --- Supabase Initialization ---
+// REPLACE THESE WITH YOUR ACTUAL SUPABASE URL AND ANON KEY
+const SUPABASE_URL = 'https://ekupnytnamynytfmozps.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrdXBueXRuYW15bnl0Zm1venBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNjg1MTMsImV4cCI6MjA4OTk0NDUxM30.PC_IdsiDyE77Qt9BYVPS6abJwT-rP4HZ1dMbWG1GEps';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // --- Page Switching Logic ---
 function showPage(pageId, navElement = null) {
     // Hide all pages
@@ -41,28 +48,59 @@ function toggleMobile() {
     mobileNav.classList.toggle('open');
 }
 
-// --- Generate Mock Data ---
-const notes = [
-    { title: "Database Normalization", cat: "DBMS", desc: "Guide to 1NF, 2NF, and 3NF with examples." },
-    { title: "Java Streams API", cat: "Java", desc: "Master functional programming in Java 8+." },
-    { title: "Operating Systems - Scheduling", cat: "OS", desc: "RR, SJF, and Priority scheduling compared." }
-];
-
-function loadNotes() {
+// --- Fetch and Render Data from Supabase ---
+async function loadNotes(searchQuery = '') {
     const grid = document.getElementById('featuredGrid');
     if (!grid) return;
 
-    grid.innerHTML = notes.map(note => `
-        <div class="note-card">
-            <span class="note-badge">${note.cat}</span>
-            <h3 class="note-title">${note.title}</h3>
-            <p class="note-desc">${note.desc}</p>
-            <div style="margin-top: 1rem;">
-                <button class="btn-signup" style="width:100%; padding: 0.5rem;">Download</button>
+    grid.innerHTML = '<p>Loading notes...</p>'; // Show loading state
+
+    try {
+        let query = supabase.from('notes').select('*').order('created_at', { ascending: false });
+
+        // If a search query exists, filter by title or category
+        if (searchQuery) {
+            query = query.ilike('title', `%${searchQuery}%`);
+        }
+
+        const { data: notes, error } = await query;
+
+        if (error) throw error;
+
+        if (notes.length === 0) {
+            grid.innerHTML = '<p>No notes found.</p>';
+            return;
+        }
+
+        grid.innerHTML = notes.map(note => `
+            <div class="note-card">
+                <span class="note-badge">${note.cat}</span>
+                <h3 class="note-title">${note.title}</h3>
+                <p class="note-desc">${note.desc}</p>
+                <div style="margin-top: 1rem;">
+                    <button class="btn-signup" style="width:100%; padding: 0.5rem;">Download</button>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
+
+    } catch (err) {
+        console.error("Error fetching notes:", err);
+        grid.innerHTML = '<p>Error loading notes. Please try again later.</p>';
+    }
 }
+
+// --- Search Functionality ---
+document.querySelector('.hero-search-btn').addEventListener('click', () => {
+    const searchInput = document.getElementById('heroSearch').value;
+    loadNotes(searchInput);
+});
+
+document.getElementById('heroSearch').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const searchInput = document.getElementById('heroSearch').value;
+        loadNotes(searchInput);
+    }
+});
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
